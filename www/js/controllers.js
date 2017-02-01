@@ -44,29 +44,30 @@ angular.module('myapp.controllers', [])
 .controller('myStocksCtrl', ['$scope',
   function($scope){
     $scope.myStockArray =[
-                          {ticker :"MSFT"},
-                          {ticker :"GOOGL"},
-                          {ticker :"FB"},
-                          {ticker :"NFLX"},
-                          {ticker :"TSLA"},
-                          {ticker :"INTC"},
-                          {ticker :"GE"},
-                          {ticker :"BAC"},
-                          {ticker :"AMZN"},
-                          {ticker :"C"},
-                          {ticker :"INFY"},
-                          {ticker :"YHOO"}
-                         
-
-                        ];
+      {ticker :"MSFT" ,name:"Microsoft Corporation.",link:"./img/microsoft.png"},
+      {ticker :"GOOGL",name:"Google Inc",link:"./img/google.png"},
+      {ticker :"FB",name:"Facebook",link:"./img/facebook.png"},
+      {ticker :"NFLX",name:"Netflix",link:"./img/netflix.png"},
+      {ticker :"TSLA",name:"Tesla",link:"./img/tesla.png"},
+      {ticker :"INTC",name:"Intel Corporation",link:"./img/intel.png"},
+      {ticker :"GE", name:"General Electic",link:"./img/microsoft.png"},
+      {ticker :"BAC",name:"Bank Of America",link:"./img/microsoft.png"},
+      {ticker :"AMZN",name:"Amazon",link:"./img/microsoft.png"},
+      {ticker :"C",name:"Citigroup",link:"./img/microsoft.png"},
+      {ticker :"INFY",name:"Infosys Inc.",link:"./img/microsoft.png"},
+      {ticker :"YHOO",name:"Yahoo Inc.",link:"./img/microsoft.png"}
+];
 
   }])
 
-.controller('stockCtrl', ['$scope','$stateParams','sotckdataServices',
-  function($scope, $stateParams,sotckdataServices) {
+.controller('stockCtrl', ['$scope','$stateParams','sotckdataServices','dateServices',
+  function($scope, $stateParams,sotckdataServices,dateServices) {
    
   $scope.ticker = $stateParams.stockTicker;
   $scope.chartView = 1;
+
+  console.log(dateServices.currentDate());
+  console.log(dateServices.oneYearAgoDate());
 
   $scope.$on('$ionicView.afterEnter',function(){
     getPriceData();

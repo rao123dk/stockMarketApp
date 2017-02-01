@@ -1,10 +1,14 @@
 <ion-view view-title="My Stocks">
   <ion-content>
     <ion-list>
-      <ion-item ng-repeat="stock in myStockArray track by stock.ticker" ng-href="#/app/{{stock.ticker}}">
+      <ion-item ng-repeat="stock in myStockArray track by stock.ticker | orderBy:'stock.ticker'" ng-href="#/app/{{stock.ticker}}">
        <div class="row row-center">
        		<div class="col">
-       			<h3>{{stock.ticker}}</h3>
+       			<h3> {{stock.name}}({{stock.ticker}})
+            <div class="item-thumbnail-right">
+              <img ng-src="{{stock.link}}" height="20" width="20">
+            </div>
+            </h3>
        		</div>
        </div>
       </ion-item>
