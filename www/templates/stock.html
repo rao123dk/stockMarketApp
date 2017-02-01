@@ -1,24 +1,83 @@
-<ion-view view-title="{{ticker}}">
+<ion-view view-title="{{companypriceData.name}}">
 	<div class="bar bar-subheader bar-light">
 		<div class="buttons" side="left">
 			<div class="button button-clear">
-				<h6>Company Name Inc.</h6>
+				<h6>{{companypriceData.name}}</h6>
 			</div>
 		</div>
-		<h2 class="title button-left button-right">1000.500</h2>
+		<h2 class="title button-left button-right">{{companypriceData.price}}</h2>
 
 		<div class="buttons" side="right">
 			<div class="button button-clear">
-				<h6>+100.000%</h6>
+				<h6>{{companypriceData.chg_percent}} %</h6>
 			</div>
 		</div>
 	</div>
   <ion-content class="has-subheader">
-   	<div class="card">
+
+  <!-- This is also good but 2nd code is best for mobile -->
+  <!-- <div ng-init="chartInterval=['1d','1w','1m','1y']"></div>
+  	Chart :- <select ng-model="selectedday" ng-options="x for x in chartInterval">{{x}}</select>
+
+  		<img ng-src="http://chart.finance.yahoo.com/z?s={{ticker}}&t={{selectedday}}&q=l&l=on&z=m&a=vm"  style="width:100%;"> -->
+<div class="button-ber">
+	<a ng-click="displayChart(1)" ng-class="chartView==1 ? 'active' :''" class="button">1 day</a>
+	<a ng-click="displayChart(2)" ng-class="chartView==2 ? 'active' :''" class="button">7 Days</a>
+	<a ng-click="displayChart(3)" ng-class="chartView==3 ? 'active' :''" class="button">1 Month</a>
+	<a ng-click="displayChart(4)" ng-class="chartView==4 ? 'active' :''" class="button">6 Month</a>
+	<a ng-click="displayChart(5)" ng-class="chartView==5 ? 'active' :''" class="button">1 Year</a>
+</div>
+
+	<img ng-if="chartView === 1" ng-src="http://chart.finance.yahoo.com/z?s={{ticker}}&t=1d&q=l&l=on&z=m&a=vm"  style="width:100%;">
+	<img ng-if="chartView === 2" ng-src="http://chart.finance.yahoo.com/z?s={{ticker}}&t=1w&q=l&l=on&z=m&a=vm"  style="width:100%;">
+	<img ng-if="chartView === 3" ng-src="http://chart.finance.yahoo.com/z?s={{ticker}}&t=1m&q=l&l=on&z=m&a=vm"  style="width:100%;">
+	<img ng-if="chartView === 4" ng-src="http://chart.finance.yahoo.com/z?s={{ticker}}&t=6m&q=l&l=on&z=m&a=vm"  style="width:100%;">
+	<img ng-if="chartView === 5" ng-src="http://chart.finance.yahoo.com/z?s={{ticker}}&t=1y&q=l&l=on&z=m&a=vm"  style="width:100%;">
+  		
+  <div class="card">
    		<div class="item item-divider">Market Data</div>
    		<div class="row row-center">
-   			<div class="col">Data:</div>
-   			<div class="col">1000.500</div>
+   			<div class="col">Market Capit.:</div>
+   			<div class="col">{{marketDetails.MarketCapitalization}}</div>
+   			<div class="col">EBITDA:</div>
+   			<div class="col">{{marketDetails.EBITDA}}</div>
+
+   		</div>
+   		<div class="row row-center">
+   			<div class="col">Ask:</div>
+   			<div class="col">{{marketDetails.Ask}}</div>
+   			<div class="col">Bid:</div>
+   			<div class="col">{{marketDetails.Bid}}</div>
+   		</div>
+   		<div class="row row-center">
+   			<div class="col">Prev. Close:</div>
+   			<div class="col">{{marketDetails.PreviousClose}}</div>
+   			<div class="col">Open:</div>
+   			<div class="col">{{marketDetails.Open}}</div>
+   		</div>
+   		<div class="row row-center">
+   			<div class="col">Day's High:</div>
+   			<div class="col">{{companypriceData.day_high}}</div>
+   			<div class="col">Day's Low:</div>
+   			<div class="col">{{companypriceData.day_low}}</div>
+   		</div>
+   		<div class="row row-center">
+   			<div class="col">Volume:</div>
+   			<div class="col">{{marketDetails.Volume}}</div>
+   			<div class="col">Average:</div>
+   			<div class="col">{{marketDetails.AverageDailyVolume}}</div>
+   		</div>
+   		<div class="row row-center">
+   			<div class="col">year high:</div>
+   			<div class="col">{{marketDetails.YearHigh}}</div>
+   			<div class="col">Year Low:</div>
+   			<div class="col">{{marketDetails.YearLow}}</div>
+   		</div>
+   		<div class="row row-center">
+   			<div class="col">P/E:</div>
+   			<div class="col">{{marketDetails.PERatio}}</div>
+   			<div class="col">EPS:</div>
+   			<div class="col">{{marketDetails.EarningsShare}}</div>
    		</div>
    	</div>
 

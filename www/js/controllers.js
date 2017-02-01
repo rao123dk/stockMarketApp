@@ -53,23 +53,50 @@ angular.module('myapp.controllers', [])
                           {ticker :"GE"},
                           {ticker :"BAC"},
                           {ticker :"AMZN"},
-                          {ticker :"C"}
+                          {ticker :"C"},
+                          {ticker :"INFY"},
+                          {ticker :"YHOO"}
+                         
 
                         ];
 
   }])
 
-.controller('stockCtrl', ['$scope','$stateParams','$http','sotckdataServices',
-  function($scope, $stateParams,$http,sotckdataServices) {
-    /*$http.get("http://finance.yahoo.com/webservice/v1/symbols/YHOO/quotes?format=json&view=detail")
-    .then(function(jsonData){
-      console.log(jsonData.data.list.resources[0].resource.fields);
-      //console.log(jsonData);
-
-
-    });*/
-
-
+.controller('stockCtrl', ['$scope','$stateParams','sotckdataServices',
+  function($scope, $stateParams,sotckdataServices) {
+   
   $scope.ticker = $stateParams.stockTicker;
+  $scope.chartView = 1;
+
+  $scope.$on('$ionicView.afterEnter',function(){
+    getPriceData();
+    getMarketDetails();
+  });
+
+$scope.displayChart = function(chartRange) {
+  $scope.chartView =chartRange;
+}
+function getPriceData(){
+    var promise = sotckdataServices.getPriceData($scope.ticker);
+    promise.then(function(companypriceData){
+      console.log(companypriceData);
+     $scope.companypriceData = companypriceData;
+       //console.log($scope.companyname);
+   });
+
+}
+
+
+
+function getMarketDetails(){
+    var promise = sotckdataServices.getMarketDetails($scope.ticker);
+    promise.then(function(marketDetails){
+      $scope.marketDetails = marketDetails;
+      console.log(marketDetails);
+     
+   });
+
+}
+   
   
 }]);
