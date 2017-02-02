@@ -2,14 +2,22 @@
 	<div class="bar bar-subheader bar-light">
 		<div class="buttons" side="left">
 			<div class="button button-clear">
-				<h6>{{companypriceData.name}}</h6>
+				<h6>{{companypriceData.symbol}}</h6>
+
 			</div>
 		</div>
-		<h2 class="title button-left button-right">${{companypriceData.price}}</h2>
+
+	<h2 class="title button-left button-right">{{companypriceData.price | currency}}</h2>
+
+		<!-- <div  ng-click="priceToggel()">
+		<h2 ng-if="mycurrency === 'doller'" class="title button-left button-right">{{companypriceData.price | currency}}</h2>
+		<h2 ng-if="mycurrency === 'inr'" class="title button-left button-right">{{companypriceData.price | currency :'INR'}}</h2>
+
+		</div> -->
 
 		<div class="buttons" side="right">
 			<div class="button button-clear">
-				<h6>{{companypriceData.chg_percent}} %</h6>
+				<h6>{{companypriceData.chg_percent| number:3}} %</h6>
 			</div>
 		</div>
 	</div>
@@ -20,12 +28,12 @@
   	Chart :- <select ng-model="selectedday" ng-options="x for x in chartInterval">{{x}}</select>
 
   		<img ng-src="http://chart.finance.yahoo.com/z?s={{ticker}}&t={{selectedday}}&q=l&l=on&z=m&a=vm"  style="width:100%;"> -->
-<div class="button-ber">
-	<a ng-click="displayChart(1)" ng-class="chartView==1 ? 'active' :''" class="button">1 day</a>
-	<a ng-click="displayChart(2)" ng-class="chartView==2 ? 'active' :''" class="button">7 Days</a>
-	<a ng-click="displayChart(3)" ng-class="chartView==3 ? 'active' :''" class="button">1 Month</a>
-	<a ng-click="displayChart(4)" ng-class="chartView==4 ? 'active' :''" class="button">6 Month</a>
-	<a ng-click="displayChart(5)" ng-class="chartView==5 ? 'active' :''" class="button">1 Year</a>
+<div class="button-ber" id="short-button-bar">
+	<a ng-click="displayChart(1)" ng-class="chartView==1 ? 'active' :''" class="button button-calm">1 day</a>
+	<a ng-click="displayChart(2)" ng-class="chartView==2 ? 'active' :''" class="button button-calm">7 Days</a>
+	<a ng-click="displayChart(3)" ng-class="chartView==3 ? 'active' :''" class="button button-calm">1 Month</a>
+	<a ng-click="displayChart(4)" ng-class="chartView==4 ? 'active' :''" class="button button-calm">6 Month</a>
+	<a ng-click="displayChart(5)" ng-class="chartView==5 ? 'active' :''" class="button button-calm">1 Year</a>
 </div>
 
 	<img ng-if="chartView === 1" ng-src="http://chart.finance.yahoo.com/z?s={{ticker}}&t=1d&q=l&l=on&z=m&a=vm"  style="width:100%;">
@@ -45,37 +53,37 @@
    		</div>
    		<div class="row row-center">
    			<div class="col">Ask:</div>
-   			<div class="col">{{marketDetails.Ask}}</div>
+   			<div class="col">{{marketDetails.Ask| number:3}}</div>
    			<div class="col">Bid:</div>
-   			<div class="col">{{marketDetails.Bid}}</div>
+   			<div class="col">{{marketDetails.Bid| number:3}}</div>
    		</div>
    		<div class="row row-center">
    			<div class="col">Prev. Close:</div>
-   			<div class="col">{{marketDetails.PreviousClose}}</div>
+   			<div class="col">{{marketDetails.PreviousClose| number:3}}</div>
    			<div class="col">Open:</div>
-   			<div class="col">{{marketDetails.Open}}</div>
+   			<div class="col">{{marketDetails.Open| number:3}}</div>
    		</div>
    		<div class="row row-center">
    			<div class="col">Day's High:</div>
-   			<div class="col">{{companypriceData.day_high}}</div>
+   			<div class="col">{{companypriceData.day_high| number:3}}</div>
    			<div class="col">Day's Low:</div>
-   			<div class="col">{{companypriceData.day_low}}</div>
+   			<div class="col">{{companypriceData.day_low| number:3}}</div>
    		</div>
    		<div class="row row-center">
    			<div class="col">Volume:</div>
-   			<div class="col">{{marketDetails.Volume}}</div>
+   			<div class="col">{{marketDetails.Volume| number:3}}</div>
    			<div class="col">Average:</div>
-   			<div class="col">{{marketDetails.AverageDailyVolume}}</div>
+   			<div class="col">{{marketDetails.AverageDailyVolume| number:3}}</div>
    		</div>
    		<div class="row row-center">
    			<div class="col">year high:</div>
-   			<div class="col">{{marketDetails.YearHigh}}</div>
+   			<div class="col">{{marketDetails.YearHigh| number:3}}</div>
    			<div class="col">Year Low:</div>
-   			<div class="col">{{marketDetails.YearLow}}</div>
+   			<div class="col">{{marketDetails.YearLow| number:3}}</div>
    		</div>
    		<div class="row row-center">
    			<div class="col">P/E:</div>
-   			<div class="col">{{marketDetails.PERatio}}</div>
+   			<div class="col">{{marketDetails.PERatio| number:3}}</div>
    			<div class="col">EPS:</div>
    			<div class="col">{{marketDetails.EarningsShare}}</div>
    		</div>

@@ -1,1 +1,28 @@
 /* Empty. Add your own CSS if you like */
+
+/* Short button bar  */
+
+/*#short-button-bar .button {
+  background-color: #fff;
+  border: none;
+  border-radius: 0;
+  font-size: 9pt;
+  line-height: normal;
+  min-height: 20px;
+}
+
+#short-button-bar .button.active {
+  font-weight: bold;
+}
+
+#short-button-bar {
+  border-bottom: 1px solid #eee;
+}*/
+
+.redflag{
+	color: red;
+}
+
+.greenFlag{
+	color: green;
+}

@@ -55,7 +55,10 @@ angular.module('myapp.controllers', [])
       {ticker :"AMZN",name:"Amazon",link:"./img/microsoft.png"},
       {ticker :"C",name:"Citigroup",link:"./img/microsoft.png"},
       {ticker :"INFY",name:"Infosys Inc.",link:"./img/microsoft.png"},
+       {ticker :"AAPL",name:"Apple Inc.",link:"./img/microsoft.png"},
       {ticker :"YHOO",name:"Yahoo Inc.",link:"./img/microsoft.png"}
+
+      
 ];
 
   }])
@@ -77,6 +80,14 @@ angular.module('myapp.controllers', [])
 $scope.displayChart = function(chartRange) {
   $scope.chartView =chartRange;
 }
+
+ $scope.mycurrency = 'doller';
+
+function priceToggel(){
+ $scope.mycurrency == 'doller' ? 'inr' : 'doller';
+}
+
+
 function getPriceData(){
     var promise = sotckdataServices.getPriceData($scope.ticker);
     promise.then(function(companypriceData){
@@ -98,6 +109,9 @@ function getMarketDetails(){
    });
 
 }
+
+
+
    
   
-}]);
+}]); // Stock Controller end here---
