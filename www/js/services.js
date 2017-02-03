@@ -51,6 +51,24 @@ angular.module('myapp.services', [])
 })
 
 
+
+.factory('notesCacheServices',function(CacheFactory){
+	var notesCache;
+
+  if(!CacheFactory.get('notesCache')) {
+    notesCache = CacheFactory('notesCache', {
+      storageMode: 'localStorage'
+    });
+  }
+  else {
+    notesCache = CacheFactory.get('notesCache');
+  }
+
+  return notesCache;
+})
+
+
+
 .factory("sotckdataServices",function($q,$http,encodeUriServices,chartDataCacheService){
 
 
@@ -62,7 +80,11 @@ var getMarketDetails = function(ticker) {
 	query = 'select * from yahoo.finance.quotes where symbol IN (" '+ ticker +' ")',
 	merketdetailsUrl ='http://query.yahooapis.com/v1/public/yql?q='+encodeUriServices.encode(query)+'&format=json&env=http://datatables.org/alltables.env';
 	console.log(merketdetailsUrl);
-	$http.get(merketdetailsUrl)
+	if (chartDataCache) {
+		deferred.resolve(chartDataCache);
+	}else
+	{
+		$http.get(merketdetailsUrl)
 		.success(function(json){
       	
       	var jsonData = json.query.results.quote;
@@ -76,9 +98,27 @@ var getMarketDetails = function(ticker) {
     	console.log("Details data error" + error);
     	deferred.reject();
    		 });
+
+	}
+	/*$http.get(merketdetailsUrl)
+		.success(function(json){
+      	
+      	var jsonData = json.query.results.quote;
+      	deferred.resolve(jsonData);
+      //console.log(jsonData);
+      chartDataCacheService.put(jsonData)
+
+    })
+
+    	.error(function(error){
+    	console.log("Details data error" + error);
+    	deferred.reject();
+   		 });*/
+
 	return deferred.promise;
 
 }
+
 
 
 
@@ -112,7 +152,39 @@ var getPriceData = function(ticker) {
 		};
  //getPriceData end here---
 
-});
+})
+
+.factory('notesService' , function(notesCacheServices){
+
+	return {
+		getNotes : function(ticker){
+			return notesCacheServices.get(ticker);
+		},
+		addNotes : function(ticker ,note){
+			var stockNotes =[];
+			if (notesCacheServices.get(ticker)) {
+				stockNotes = notesCacheServices.get(ticker);
+				stockNotes.push(note);
+
+			}
+			else{
+				stockNotes.push(note);
+
+			}
+			return notesCacheServices.put(ticker,stockNotes);
+		} ,
+		deleteNotes : function(ticker, index){
+			var stockNotes =[];
+			stockNotes = notesCacheServices.get(ticker);
+			stockNotes.splice(index,1);
+			notesCacheServices.put(ticker,stockNotes);
+		}
+	}
+
+})
+
+
+;
 
 
     

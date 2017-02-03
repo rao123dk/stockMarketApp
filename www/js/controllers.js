@@ -63,13 +63,15 @@ angular.module('myapp.controllers', [])
 
   }])
 
-.controller('stockCtrl', ['$scope','$stateParams','sotckdataServices','dateServices',
-  function($scope, $stateParams,sotckdataServices,dateServices) {
+.controller('stockCtrl', [
+                          '$scope','$ionicPopup','$stateParams',
+                          'sotckdataServices','dateServices','notesService',
+  function($scope,$ionicPopup, $stateParams,sotckdataServices,dateServices,notesService) {
    
   $scope.ticker = $stateParams.stockTicker;
   $scope.chartView = 1;
   $scope.today = new Date();
-  
+  $scope.stockNotes =[];
 
   console.log(dateServices.currentDate());
   console.log(dateServices.oneYearAgoDate());
@@ -77,14 +79,108 @@ angular.module('myapp.controllers', [])
   $scope.$on('$ionicView.afterEnter',function(){
     getPriceData();
     getMarketDetails();
+    $scope.stockNotes = notesService.getNotes($scope.ticker);
   });
 
 $scope.displayChart = function(chartRange) {
   $scope.chartView =chartRange;
 }
 
- $scope.mycurrency = 'doller';
+// Add note popup
+$scope.addNote = function() {
+  $scope.note = {
+    title :'note', 
+    body:'',
+    date : $scope.today ,
+    ticker :$scope.ticker 
+  };
 
+
+  var note = $ionicPopup.show({
+    template: '<input type="text" ng-model="note.title" id="stock-note-title"><textarea type="text" ng-model="note.body" id="stock-note-body"></textarea>',
+    title: 'New note for' + $scope.ticker,
+    subTitle: 'Please use normal things',
+    scope: $scope,
+    buttons: [
+      { 
+        text: 'Cancel',
+        onTap : function(e){
+          return;
+        }
+      },
+      {
+        text: '<b>Save</b>',
+        type: 'button-balanced',
+        onTap: function(e) {
+          notesService.addNotes($scope.ticker , $scope.note); 
+
+          console.log($scope.note);
+        }
+      }
+    ]
+  });
+
+  note.then(function(res) {
+     $scope.stockNotes = notesService.getNotes($scope.ticker);
+  });
+
+
+ };
+
+ // add note end Here---/>
+
+ // Open  notes 
+$scope.openNote = function(index , title, body) {
+  $scope.note = {
+    title :title, 
+    body:body,
+    date : $scope.today ,
+    ticker :$scope.ticker 
+  };
+
+
+  var note = $ionicPopup.show({
+    //template: '<input type="text" ng-model="note.title" id="stock-note-title"><textarea type="text" ng-model="note.body" id="stock-note-body"></textarea>',
+    title: $scope.note.title,
+    subTitle: 'Please use normal things',
+    scope: $scope,
+    buttons: [
+      {
+        text : 'Delete',
+        type : 'button-assertive button-small',
+        onTap : function(e){
+          notesService.deleteNotes($scope.ticker,index);
+        }
+      },
+      { 
+        text: 'Cancel',
+        type : 'button-small',
+        onTap : function(e){
+          return;
+        }
+      },
+      {
+        text: '<b>Save</b>',
+        type: 'button-balanced button-small',
+        onTap: function(e) {
+          notesService.deleteNotes($scope.ticker,index);
+          notesService.addNotes($scope.ticker , $scope.note); 
+          console.log($scope.note);
+        }
+      }
+    ]
+  });
+
+  note.then(function(res) {
+     $scope.stockNotes = notesService.getNotes($scope.ticker);
+  });
+
+
+ };
+
+//open note popup end here ----/>
+
+$scope.mycurrency = 'doller';
 function priceToggel(){
  $scope.mycurrency == 'doller' ? 'inr' : 'doller';
 }
