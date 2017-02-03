@@ -1,13 +1,18 @@
-<ion-view view-title="{{companypriceData.name}}">
-	<div class="bar bar-subheader bar-light">
+<ion-view view-title="{{companypriceData.name}}" >
+
+	<!-- <ion-nav-bar id="stock-navbar" ng-class="companypriceData.change < 0 ? 'redflag bar-dark' : 'greenFlag bar-dark' " >
+    	<ion-nav-back-button></ion-nav-back-button>
+  	</ion-nav-bar> -->
+
+	<div class="bar bar-subheader bar-light" id="stock-subheader-bar">
 		<div class="buttons" side="left">
-			<div class="button button-clear">
-				<h6>{{companypriceData.symbol}}</h6>
+			<div class="button button-clear display-flex">
+				<h6 id="stock-name">{{companypriceData.symbol}}</h6>
 
 			</div>
 		</div>
 
-	<h2 class="title button-left button-right">{{companypriceData.price | currency}}</h2>
+	<h2 class="title button-left button-right stock-price">{{companypriceData.price | currency}}</h2>
 
 		<!-- <div  ng-click="priceToggel()">
 		<h2 ng-if="mycurrency === 'doller'" class="title button-left button-right">{{companypriceData.price | currency}}</h2>
@@ -17,7 +22,12 @@
 
 		<div class="buttons" side="right">
 			<div class="button button-clear">
-				<h6>{{companypriceData.chg_percent| number:3}} %</h6>
+				<!-- <h6 ng-class="{{colorFlag}}" id="stock-change">{{companypriceData.chg_percent| number:3}} %</h6> -->
+			<h6 id="stock-change" ng-class="companypriceData.change < 0 ? 'redflag' : 'greenFlag' ">{{companypriceData.chg_percent| number:3}}%</br>
+			<span ng-if="companypriceData.change < 0">({{companypriceData.change | number:2}})</span>
+			<span ng-if="companypriceData.change > 0">(+{{companypriceData.change | number:2}})</span>
+			</h6>
+			
 			</div>
 		</div>
 	</div>
@@ -43,7 +53,7 @@
 	<img ng-if="chartView === 5" ng-src="http://chart.finance.yahoo.com/z?s={{ticker}}&t=1y&q=l&l=on&z=m&a=vm"  style="width:100%;">
   		
   <div class="card">
-   		<div class="item item-divider">Market Data</div>
+   		<div class="item item-divider">Market Data<span id="last-trade">Last Trade:- {{marketDetails.LastTradeTime | date:'h:mm:ss a'}}</span></div>
    		<div class="row row-center">
    			<div class="col">Market Capit.:</div>
    			<div class="col">{{marketDetails.MarketCapitalization}}</div>

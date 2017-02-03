@@ -31,11 +31,34 @@ angular.module('myapp.services', [])
 	}
 })
 
-.factory("sotckdataServices",function($q,$http,encodeUriServices){
+.factory('chartDataCacheService', function(CacheFactory) {
+
+  var chartDataCache;
+
+  if(!CacheFactory.get('chartDataCache')) {
+
+    chartDataCache = CacheFactory('chartDataCache', {
+      maxAge: 60 * 60 * 8 * 1000,
+      deleteOnExpire: 'aggressive',
+      storageMode: 'localStorage'
+    });
+  }
+  else {
+    chartDataCache = CacheFactory.get('chartDataCache');
+  }
+
+  return chartDataCache;
+})
+
+
+.factory("sotckdataServices",function($q,$http,encodeUriServices,chartDataCacheService){
 
 
 var getMarketDetails = function(ticker) {
 	var deferred = $q.defer(),
+	cacheKey = ticker,
+	chartDataCache = chartDataCacheService.get(cacheKey),
+
 	query = 'select * from yahoo.finance.quotes where symbol IN (" '+ ticker +' ")',
 	merketdetailsUrl ='http://query.yahooapis.com/v1/public/yql?q='+encodeUriServices.encode(query)+'&format=json&env=http://datatables.org/alltables.env';
 	console.log(merketdetailsUrl);
@@ -45,6 +68,8 @@ var getMarketDetails = function(ticker) {
       	var jsonData = json.query.results.quote;
       	deferred.resolve(jsonData);
       //console.log(jsonData);
+      chartDataCacheService.put(jsonData)
+
     })
 
     	.error(function(error){

@@ -21,8 +21,22 @@
 
 .redflag{
 	color: red;
+	font-size: 70%;
 }
 
 .greenFlag{
-	color: green;
+	color: #006400;
+	font-size: 70%;
+}
+
+#stock-navbar{
+	border: none;
+}
+
+#stock-navbar .back-text{
+	font-size: 11pt;
+}
+
+#last-trade{
+	float: right;
 }
