@@ -110,7 +110,7 @@
 
    	<div class="newsCard">
    		<div class="item item-divider">News</div>
-   		<a class="item item-icon-right" ng-repeat="news in newsStories" ng-click="openWindow(news.link)">
+   		<a class="item item-icon-right" ng-repeat="news in newsStories |limitTo:5" ng-click="openWindow(news.link)">
    		<h3 >{{news.title}}</h3>
    		<h2>{{news.pubDate}}</h2>
    		<p ng-if="news.description.length >0">{{news.description}}</p>
