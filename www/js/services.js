@@ -67,7 +67,9 @@ angular.module('myapp.services', [])
   return notesCache;
 })
 
-
+// For fetching NSE and BSE data 
+// http://finance.google.com/finance/info?q=NSE:AIAENG,NSE:MARUTI
+// https://www.google.com/finance/info?q=BSE&&MARUTI
 
 .factory("sotckdataServices",function($q,$http,encodeUriServices,chartDataCacheService){
 
@@ -183,6 +185,32 @@ var getPriceData = function(ticker) {
 
 })
 
+.factory("newsFeedServices" , function($q , $http){
+	return {
+		getNews : function(ticker){
+			var deferred = $q.defer(),
+			x2js = new X2JS();
+			newsUrl = "http://finance.yahoo.com/rss/headline?s="+ticker;
+			$http.get(newsUrl)
+			.success(function(xml){
+				var xmlDocs = x2js.parseXmlString(xml),
+				json = x2js.xml2json(xmlDocs),
+				jsonData = json.rss.channel.item;
+				deferred.resolve(jsonData);
+				console.log(jsonData);
+			})
+			.error(function(error){
+				deferred.reject();
+				console.log("error in news newsFeedServices" + error);
+			});
+			return deferred.promise;
+			
+		}
+
+	};
+	
+
+})
 
 ;
 

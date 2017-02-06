@@ -66,20 +66,23 @@ angular.module('myapp.controllers', [])
 .controller('stockCtrl', [
                           '$scope','$ionicPopup','$stateParams',
                           'sotckdataServices','dateServices','notesService',
-  function($scope,$ionicPopup, $stateParams,sotckdataServices,dateServices,notesService) {
+                          'newsFeedServices',
+  function($scope,$ionicPopup, $stateParams,sotckdataServices,dateServices,notesService,newsFeedServices) {
    
   $scope.ticker = $stateParams.stockTicker;
   $scope.chartView = 1;
   $scope.today = new Date();
   $scope.stockNotes =[];
 
-  console.log(dateServices.currentDate());
-  console.log(dateServices.oneYearAgoDate());
+  //console.log(dateServices.currentDate());
+  //console.log(dateServices.oneYearAgoDate());
 
   $scope.$on('$ionicView.afterEnter',function(){
     getPriceData();
     getMarketDetails();
     $scope.stockNotes = notesService.getNotes($scope.ticker);
+    getNewsFromNewsFeed();
+    
   });
 
 $scope.displayChart = function(chartRange) {
@@ -89,7 +92,7 @@ $scope.displayChart = function(chartRange) {
 // Add note popup
 $scope.addNote = function() {
   $scope.note = {
-    title :'note', 
+    title :'Note', 
     body:'',
     date : $scope.today ,
     ticker :$scope.ticker 
@@ -98,8 +101,8 @@ $scope.addNote = function() {
 
   var note = $ionicPopup.show({
     template: '<input type="text" ng-model="note.title" id="stock-note-title"><textarea type="text" ng-model="note.body" id="stock-note-body"></textarea>',
-    title: 'New note for' + $scope.ticker,
-    subTitle: 'Please use normal things',
+    title: 'New note for' +" " +$scope.ticker,
+    subTitle: 'Please Enter some text',
     scope: $scope,
     buttons: [
       { 
@@ -146,21 +149,21 @@ $scope.openNote = function(index , title, body) {
     scope: $scope,
     buttons: [
       {
-        text : 'Delete',
+        text : '<b class="ion-trash-b">Delete</b>',
         type : 'button-assertive button-small',
         onTap : function(e){
           notesService.deleteNotes($scope.ticker,index);
         }
       },
       { 
-        text: 'Cancel',
+        text: '<b class="ion-android-cancel">Cancel</b>',
         type : 'button-small',
         onTap : function(e){
           return;
         }
       },
       {
-        text: '<b>Save</b>',
+        text: '<b class="ion-android-done">Save</b>',
         type: 'button-balanced button-small',
         onTap: function(e) {
           notesService.deleteNotes($scope.ticker,index);
@@ -179,6 +182,24 @@ $scope.openNote = function(index , title, body) {
  };
 
 //open note popup end here ----/>
+
+//open window function
+ function openWindow(link) {
+  console.log("open linke>>>" + link);
+ }
+
+
+// get news feed start here
+
+function getNewsFromNewsFeed(){
+ $scope.newsStories =[];
+  var promise = newsFeedServices.getNews($scope.ticker);
+  promise.then(function(data){
+    $scope.newsStories = data;
+  });
+}
+
+//get news feed end here ---/>
 
 $scope.mycurrency = 'doller';
 function priceToggel(){
