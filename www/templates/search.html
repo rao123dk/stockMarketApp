@@ -2,17 +2,21 @@
 	<div class="bar bar-header bar-dark item-input-inset">
 		<div class="item-input-wrapper">
 			<i class="icon ion-ios-search-strong placeholder-icon light"></i>
-			<input type="test" placeholder="Search Stocks...">
-			<i class="icon ion-close-round"></i>
+			<input 
+			type="text" 
+			placeholder="Search Stocks..."
+			ng-model="searchQuery" ng-change="searchOnBlur()" 
+			>
+			<i class="icon ion-close-round" ng-click="closeModal()"></i>
 		</div>
 		
 	</div>
 
 	<ion-content class="has-header">
 	     <ion-list>
-	     	<ion-item class="item-dark"> 
-	     		<h3 class="light">Result</h3>
-	     		<h3 class="light">Info</h3>
+	     	<ion-item class="item-dark" ng-repeat="Result in searchResult"> 
+	     		<h3 class="light">{{Result.symbol}}</h3>
+	     		<h3 class="light">{{Result.exchDisp}}</h3>
 	     	</ion-item>
 	     </ion-list>
 	</ion-content>

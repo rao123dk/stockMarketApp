@@ -66,3 +66,30 @@
 	font-weight:400;
 	white-space: normal;
 }
+
+
+.background-red{
+	background-color: #ce1831 !important; 
+}
+
+.background-green{
+	background-color: #27a30e !important; 
+}
+
+div.stock-price-change{
+	padding-right: 2px;
+	
+	text-align: right;
+	float:right;
+
+}
+
+div.stock-price-change h3{
+	font-weight: normal;
+}
+
+div.stock-price-change h3,
+div.stock-price-change h6,
+{
+	color: #fff;
+}

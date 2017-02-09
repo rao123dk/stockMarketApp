@@ -97,6 +97,32 @@ angular.module('myapp.services', [])
 })
 
 
+// factory for stock data services in home page 
+
+.factory('stockPriceCacheService', function(CacheFactory) {
+
+  var stockPriceCache;
+
+  if(!CacheFactory.get('stockPriceCache')) {
+
+    stockPriceCache = CacheFactory('stockPriceCache', {
+      maxAge: 5 * 1000,
+      deleteOnExpire: 'aggressive',
+      storageMode: 'localStorage'
+    });
+  }
+  else {
+    stockPriceCache = CacheFactory.get('stockPriceCache');
+  }
+
+  return stockPriceCache;
+})
+
+
+
+//end here
+
+
 
 .factory('notesCacheServices',function(CacheFactory){
 	var notesCache;
@@ -117,7 +143,7 @@ angular.module('myapp.services', [])
 // http://finance.google.com/finance/info?q=NSE:AIAENG,NSE:MARUTI
 // https://www.google.com/finance/info?q=BSE&&MARUTI
 
-.factory("sotckdataServices",function($q,$http,encodeUriServices,chartDataCacheService){
+.factory("sotckdataServices",function($q,$http,stockPriceCacheService,encodeUriServices,chartDataCacheService){
 
 
 var getMarketDetails = function(ticker) {
@@ -137,7 +163,7 @@ var getMarketDetails = function(ticker) {
       	
       	var jsonData = json.query.results.quote;
       	deferred.resolve(jsonData);
-      //console.log(jsonData);
+      console.log(jsonData);
       chartDataCacheService.put(jsonData)
 
     })
@@ -174,6 +200,7 @@ var getMarketDetails = function(ticker) {
 var getPriceData = function(ticker) {
 
 		var deferred = $q.defer(),
+		cacheKey = ticker,
 		 url = "http://finance.yahoo.com/webservice/v1/symbols/"+ ticker +"/quotes?format=json&view=detail";
 
 		$http.get(url)
@@ -181,6 +208,7 @@ var getPriceData = function(ticker) {
       	//console.log(jsonData.data.list.resources[0].resource.fields);
       	var jsonData = json.list.resources[0].resource.fields;
       	deferred.resolve(jsonData);
+      	stockPriceCacheService.put(cacheKey,jsonData);
       //console.log(jsonData);
     })
 
@@ -257,6 +285,58 @@ var getPriceData = function(ticker) {
 	
 
 })
+
+/*.factory('searchService', function($q,$http){
+	return {
+		search : function(query){
+			var deferred = $q.defer(),
+			url = 'https://s.yimg.com/aq/autoc?query='+ query +'&region=CA&lang=en-CA&callback=YAHOO.util.ScriptNodeDataSource.callbacks';
+		    YAHOO = window.YAHOO = {
+				Finance :{
+					SymbolSuggest :{}
+				}
+			};
+			
+			YAHOO.Finance.SymbolSuggest.ssCallback = function(data){
+				var jsonData = data.ResultSet.Result;
+
+				deferred.resolve(jsonData);
+				console.log(jsonData);
+			
+			};
+
+			$http.jsonp(url)
+			.success(YAHOO.Finance.SymbolSuggest.ssCallback);
+
+			return deferred.promise;
+		}
+	};
+	
+
+})*/
+
+.factory('searchService', function($q, $http) {
+
+    return {
+
+      search: function(query) {
+      	console.log( query);
+        var deferred = $q.defer(),
+        url = 'https://s.yimg.com/aq/autoc?query='+ query +'&region=CA&lang=en-CA&callback=JSON_CALLBACK';
+
+        $http.jsonp(url)
+          .success(function(data) {
+            var jsonData = data.ResultSet.Result;
+            deferred.resolve(jsonData);
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+
+        return deferred.promise;
+      }
+    };
+  })
 
 ;
 

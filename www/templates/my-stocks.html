@@ -7,16 +7,33 @@
 
   
   <ion-content>
-    <ion-list>
-      <ion-item ng-repeat="stock in myStockArray | orderBy: '-chg_percent' track by stock.ticker" ng-href="#/app/{{stock.ticker}}">
+  <ion-refresher
+    pulling-text="Pull to refresh..."
+    on-refresh="getMyStocksData()"> <!--can add on pulling insted of on-refresh -->
+  </ion-refresher>
+
+    <ion-list>  <!-- "stock in myStockArray track by stock.ticker" - changed after home page rela time data -->
+      <ion-item ng-repeat="stock in myStockData | orderBy:'-chg_percent' track by stock.symbol" ng-href="#/app/{{stock.symbol}}">
        <div class="row row-center">
        		<div class="col">
-       			<h3> {{stock.name}}({{stock.ticker}})
-            <div class="item-thumbnail-right">
-              <img ng-src="{{stock.link}}" height="20" width="20">
-            </div>
-            </h3>
-       		</div>
+       			<h3>{{stock.symbol}} </h3>
+            <h6 ::ng-bind-html="stock.name"></h6>
+              <!-- <div class="item-thumbnail-right">
+                <img ng-src="{{stock.link}}" height="20" width="20">
+              </div> -->
+          </div>
+          
+          <div class="col-25">
+            <h3>{{stock.price | currency}}</h3>
+            <h6 >{{stock.utctime | date:'h:mm:ss a'}}</h6>
+          </div>
+          <div class="col stock-price-change" ng-class="stock.change <= 0 ? 'background-red' : 'background-green'">
+            <h3>{{stock.chg_percent| number:3}}%</h3>
+            <h6 ng-if="stock.change < 0">{{stock.change| number:2}}</h6>
+            <h6 ng-if="stock.change > 0">+{{stock.change| number:2}}</h6>
+          </div>
+          
+
        </div>
       </ion-item>
     </ion-list>

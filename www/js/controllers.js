@@ -7,8 +7,27 @@ angular.module('myapp.controllers', [])
   
 }])
 
-.controller('myStocksCtrl', ['$scope',
-  function($scope){
+.controller('myStocksCtrl', ['$scope','$interval',
+  'sotckdataServices','stockPriceCacheService',
+  function($scope,$interval,sotckdataServices,stockPriceCacheService){
+
+    $scope.$on('$ionicView.afterEnter',function(){
+    $scope.getMyStocksData();
+  });
+
+
+    $scope.getMyStocksData = function(){
+     $scope.myStockArray.forEach(function(stock){
+        var promise = sotckdataServices.getPriceData(stock.ticker);
+        $scope.myStockData =[];
+        promise.then(function(data){
+          $scope.myStockData.push(stockPriceCacheService.get(data.symbol));
+        });
+      });
+       $scope.$broadcast('scroll.refreshComplete');
+    }
+ $interval($scope.getMyStocksData,5000);
+
     $scope.myStockArray =[
       {ticker :"MSFT" ,name:"Microsoft Corporation.",link:"./img/microsoft.png"},
       {ticker :"GOOGL",name:"Google Inc",link:"./img/google.png"},
@@ -22,12 +41,16 @@ angular.module('myapp.controllers', [])
       {ticker :"C",name:"Citigroup",link:"./img/microsoft.png"},
       {ticker :"INFY",name:"Infosys Inc.",link:"./img/microsoft.png"},
       {ticker :"AAPL",name:"Apple Inc.",link:"./img/microsoft.png"},
-      {ticker :"YHOO",name:"Yahoo Inc.",link:"./img/microsoft.png"}
+      {ticker :"YHOO",name:"Yahoo Inc.",link:"./img/microsoft.png"},
+      {ticker :"TTM",name:"Tata Motors",link:"./img/microsoft.png"},
+      {ticker :"EBAY"},
+      {ticker :"NVDA"},
 
-      
-];
+      ];
 
-  }])
+
+
+}])
 
 .controller('stockCtrl', [
                           '$scope','$ionicPopup','$stateParams',
@@ -207,10 +230,53 @@ function getMarketDetails(){
 }]) // Stock Controller end here---
 
 
-.controller('SearchCtrl', ['$scope','modalService', 
-    function($scope,modalService){
-  
-    
-}])
+// Search controller start here
 
+
+
+.controller('SearchCtrl', ['$scope','modalService','searchService', 
+    function($scope,modalService,searchService){
+  
+    $scope.closeModal = function(){
+      modalService.closeModal();
+    };
+
+    $scope.searchOnBlur = function(){
+      $scope.searchResult ='';
+      startSearch($scope.searchQuery);
+    };
+
+    var startSearch = function(query){
+      searchService.search(query)
+      .then(function(data){
+        $scope.searchResult = data;
+      });
+
+    }
+}])
+/*
+.controller('SearchCtrl', ['$scope', '$state', 'modalService', 'searchService',
+  function($scope, $state, modalService, searchService) {
+
+    $scope.closeModal = function() {
+      modalService.closeModal();
+    };
+
+    $scope.search = function() {
+      $scope.searchResults = '';
+      startSearch($scope.searchQuery);
+    };
+
+    var startSearch = ionic.debounce(function(query) {
+      searchService.search(query)
+        .then(function(data) {
+          $scope.searchResults = data;
+        });
+    }, 400);
+
+    $scope.goToStock = function(ticker) {
+      modalService.closeModal();
+      $state.go('app.stock', {stockTicker: ticker});
+    };
+}])*/
 ;
